@@ -49,6 +49,9 @@ exports.register = async (req, res) => {
       },
       token,
     })
+
+   
+    
   } catch (e) {
     console.log(e)
   }
@@ -59,6 +62,7 @@ exports.register = async (req, res) => {
 //=============================================
 
 exports.loginUser = async (req, res) => {
+
   try {
     // 1.  destructuring email, password from body
     const { email, password } = req.body
@@ -85,6 +89,7 @@ exports.loginUser = async (req, res) => {
       expiresIn: '7d',
     })
 
+  
     // send response
     res.json({
       user: {
@@ -95,6 +100,8 @@ exports.loginUser = async (req, res) => {
       },
       token
     })
+ 
+
   } catch (e) {
     console.log(e)
   }
