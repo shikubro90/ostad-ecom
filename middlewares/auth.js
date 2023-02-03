@@ -13,3 +13,16 @@ exports.requireSignIn = (req, res, next) => {
     return res.status(401).json(error)
   }
 };
+
+exports.isAdmin = async(req, res, next)=>{
+  try{
+    const user = await User.findById(req.user._id)
+    if(user.role !==1){
+      res.status(401).json("Unauthorized")
+    }else{
+      next()
+    }
+  }catch(e){
+    res.status(401).json(e)
+  }
+}
