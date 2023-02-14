@@ -1,5 +1,11 @@
 const Category = require("../models/category");
 const slugify = require("slugify");
+<<<<<<< HEAD
+=======
+
+
+// create collection
+>>>>>>> e0adad6e8efb7c45780d68ad20f4b1f8d907dacb
 
 const category_sort = {
   replacement: "-", // replace spaces with replacement character, defaults to `-`
@@ -29,13 +35,27 @@ exports.createCategory = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // update category
+=======
+// collection update
+>>>>>>> e0adad6e8efb7c45780d68ad20f4b1f8d907dacb
 
 exports.update = async (req, res) => {
   try {
     const { name } = req.body;
     const { categoryId } = req.params;
+<<<<<<< HEAD
     const category = await Category.findByIdAndUpdate(
+=======
+    console.log(categoryId)
+    const getCategoryId = await Category.findOne({_id: categoryId });
+
+    if (!getCategoryId) {
+      return res.json({ error: "Category not exists" });
+    }
+    const Category = await Category.findByIdAndUpdate(
+>>>>>>> e0adad6e8efb7c45780d68ad20f4b1f8d907dacb
       categoryId,
       {
         name,
@@ -83,3 +103,15 @@ exports.read = async (req, res) => {
     return res.json(error.message);
   }
 };
+
+
+
+// get collections
+
+exports.getCollections = async (req, res)=>{
+  try{
+
+  }catch(error){
+    console.log(error)
+  }
+}
