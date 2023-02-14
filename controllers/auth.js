@@ -39,6 +39,16 @@ exports.register = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "7d",
     });
+
+    // Send HTTP-only cookie
+    res.cookie("token", token, {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(Date.now() + 7 * 1000 * 86400),
+      sameSite: "none",
+      // secure: true,
+    });
+
     // sending response
     res.json({
       user: {
@@ -100,6 +110,25 @@ exports.loginUser = async (req, res) => {
   }
 };
 
+// logout user
+
+exports.logout = async (req, res) => {
+  try {
+    // Send HTTP-only cookie
+    res.cookie("token", "", {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "none",
+      // secure: true,
+    });
+
+    res.json({ Message: "LogOut successfully" });
+  } catch (error) {
+    return res.json(error.message);
+  }
+};
+
 //=============================================
 //==================  UpdateProfile  ===========================
 //=============================================
@@ -124,11 +153,11 @@ exports.updateProfile = async (req, res) => {
       },
       {
         new: true,
-      }           
+      }
     );
 
     update.password = undefined;
-    res.json(update)
+    res.json(update);
   } catch (error) {
     console.log(error);
   }
