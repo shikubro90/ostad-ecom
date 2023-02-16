@@ -5,7 +5,7 @@ const router = express.Router()
 const {
   createCategory,
   update,
-  getCollections,
+//   getCollections,
   remove,
   list,
   read,
@@ -13,7 +13,7 @@ const {
 
 router.post('/create-category', requireSignIn, isAdmin, createCategory)
 router.put('/update-category/:categoryId', requireSignIn, isAdmin, update)
-router.get('/get-collections', requireSignIn, isAdmin, getCollections)
+// router.get('/get-collections', requireSignIn, isAdmin, getCollections)
 router.delete('/remove/:categoryId', requireSignIn, isAdmin, remove)
 router.get('/list', requireSignIn, isAdmin, list)
 router.get('/category/:slug', read)

@@ -62,14 +62,14 @@ exports.remove = async (req, res) => {
 
 // see all category
 
-exports.list = async (req, res) => {
-  try {
-    const all = await Category.find({});
-    res.json(all);
-  } catch (error) {
-    return res.json(error.message);
-  }
-};
+// exports.list = async (req, res) => {
+//   try {
+//     const all = await Category.find({});
+//     res.json(all);
+//   } catch (error) {
+//     return res.json(error.message);
+//   }
+// };
 
 // read category
 
@@ -84,15 +84,15 @@ exports.read = async (req, res) => {
 
 
 
-// get collections
-exports.getCollections = async (req, res)=>{
-  try{
-    const all = await Category.find({})
-    res.json(all)
-  }catch(error){
-    console.log(error)
-  }
-}
+// // get collections
+// exports.getCollections = async (req, res)=>{
+//   try{
+//     const all = await Category.find({})
+//     res.json(all)
+//   }catch(error){
+//     console.log(error)
+//   }
+// }
 
 // remove category
 
