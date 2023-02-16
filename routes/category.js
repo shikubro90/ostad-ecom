@@ -1,11 +1,21 @@
-const express = require("express");
-const { requireSignIn, isAdmin } = require("../middlewares/auth");
-const router = express.Router();
+const express = require('express')
+const { requireSignIn, isAdmin } = require('../middlewares/auth')
+const router = express.Router()
 
-const { createCategory, update, getCollections } = require("../controllers/category");
+const {
+  createCategory,
+  update,
+  getCollections,
+  remove,
+  list,
+  read,
+} = require('../controllers/category')
 
-router.post("/create-category", requireSignIn, isAdmin, createCategory);
-router.put("/update-category/:categoryId", requireSignIn, isAdmin, update);
-router.get("/get-collections",requireSignIn, isAdmin, getCollections)
+router.post('/create-category', requireSignIn, isAdmin, createCategory)
+router.put('/update-category/:categoryId', requireSignIn, isAdmin, update)
+router.get('/get-collections', requireSignIn, isAdmin, getCollections)
+router.delete('/remove/:categoryId', requireSignIn, isAdmin, remove)
+router.get('/list', requireSignIn, isAdmin, list)
+router.get('/category/:slug', read)
 
-module.exports = router;
+module.exports = router

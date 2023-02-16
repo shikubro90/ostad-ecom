@@ -3,7 +3,6 @@ const slugify = require("slugify");
 
 
 // create collection
-
 exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -24,13 +23,12 @@ exports.createCategory = async (req, res) => {
 };
 
 // collection update
-
 exports.update = async (req, res) => {
   try {
     const { name } = req.body;
     const { categoryId } = req.params;
     console.log(categoryId)
-    const getCategoryId = await Category.findOne({_id: categoryId });
+    const getCategoryId = await Category.findById(categoryId);
 
     if (!getCategoryId) {
       return res.json({ error: "Category not exists" });
@@ -53,6 +51,50 @@ exports.update = async (req, res) => {
 };
 
 
+
+// get collections
+exports.getCollections = async (req, res)=>{
+  try{
+    const all = await Category.find({})
+    res.json(all)
+  }catch(error){
+    console.log(error)
+  }
+}
+
+// remove category
+
+exports.remove = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+    const remove = await Category.findByIdAndDelete(categoryId);
+    res.json(remove);
+  } catch (err) {
+    return res.json(err.message);
+  }
+};
+
+// see all category
+
+exports.list = async (req, res) => {
+  try {
+    const all = await Category.find({});
+    res.json(all);
+  } catch (error) {
+    return res.json(error.message);
+  }
+};
+
+// read category
+
+exports.read = async (req, res) => {
+  try {
+    const category = await Category.findOne({ slug: req.params.slug });
+    res.json(category);
+  } catch (error) {
+    return res.json(error.message);
+  }
+};
 
 // get collections
 
