@@ -8,6 +8,7 @@ const { hashPassword, comparePassword } = require("../helpers/auth");
 //==================Register User================
 //=============================================
 exports.register = async (req, res) => {
+  
   try {
     // 1.  destructuring name, email, password from body
     const { name, email, password } = req.body;

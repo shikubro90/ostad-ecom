@@ -1,6 +1,3 @@
 {
-    "editor.defaultFormatter": "svipas.prettier-plus",
-    "[javascript]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    }
+    "editor.formatOnSave": true
 }

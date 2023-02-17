@@ -1,14 +1,20 @@
-const Product = require("../models/products")
-const slugify = require("slugify")
-const fs = require("fs")
-exports.createProduct = async (req, res)=>{
+const Product = require("../models/products");
+const slugify = require("slugify");
+const fs = require("fs");
+exports.createProduct = async (req, res) => {
   try {
     console.log(req.fields);
     console.log(req.files);
-    const { name, description, price, category, quantity, shipping } =
-      req.fields;
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      shipping,
+    } = req.fields;
     const { photo } = req.files;
-    console.log("PHOTO========>",photo)
+    console.log("PHOTO========>", photo);
 
     // validation
     switch (true) {
@@ -42,13 +48,12 @@ exports.createProduct = async (req, res)=>{
     console.log(err);
     return res.status(400).json(err.message);
   }
-}
-
+};
 
 // list
 
-exports.list = async (req, res)=>{
-  try{
+exports.list = async (req, res) => {
+  try {
     const products = await Product.find({})
       .populate("category")
       .select("-photo")
@@ -56,7 +61,103 @@ exports.list = async (req, res)=>{
       .sort({ createdAt: -1 });
 
     res.json(products);
-  }catch(error){
-    return res.json({"Message": error.message})
+  } catch (error) {
+    return res.json({ Message: error.message });
   }
-}
+};
+
+// read
+
+exports.read = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const product = await Product.findOne({ slug })
+      .select("-photo")
+      .populate("category");
+    res.json(product);
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
+};
+
+// photo
+
+exports.photo = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.productId).select(
+      "photo"
+    );
+    if (product.photo.data) {
+      res.set("Content-Type", product.photo.contentType);
+      res.set("Cross-Origin-Resource-Policy", "cross-origin");
+      return res.send(product.photo.data);
+    }
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
+};
+
+// remove product
+
+exports.remove = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete(
+      req.params.productId
+    ).select("photo");
+    return res.json(product);
+  } catch (error) {
+    return res.json({ Message: error.message });
+  }
+};
+
+// update
+
+exports.update = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      shipping,
+    } = req.fields;
+    const { photo } = req.files;
+
+    switch (true) {
+      case !name?.trim():
+        return res.json({ error: "Name is required" });
+      case !description?.trim():
+        return res.json({ error: "Description is required" });
+      case !price?.trim():
+        return res.json({ error: "Price is required" });
+      case !category?.trim():
+        return res.json({ error: "Category is required" });
+      case !quantity?.trim():
+        return res.json({ error: "Quantity is required" });
+      case !shipping?.trim():
+        return res.json({ error: "Shipping is required" });
+      case photo && photo.size > 1000000:
+        return res.json({ error: "Image should be less than 1mb in size" });
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.productId,
+      {
+        ...req.fields,
+        slug: slugify(name),
+      },
+      { new: true }
+    );
+
+    if (photo) {
+      product.photo.data = fs.readFileSync(photo.path);
+      product.photo.contentType = photo.type;
+    }
+
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    return res.json({ Message: error.message });
+  }
+};
