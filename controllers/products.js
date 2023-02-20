@@ -5,14 +5,8 @@ exports.createProduct = async (req, res) => {
   try {
     console.log(req.fields);
     console.log(req.files);
-    const {
-      name,
-      description,
-      price,
-      category,
-      quantity,
-      shipping,
-    } = req.fields;
+    const { name, description, price, category, quantity, shipping } =
+      req.fields;
     const { photo } = req.files;
     console.log("PHOTO========>", photo);
 
@@ -114,14 +108,8 @@ exports.remove = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      category,
-      quantity,
-      shipping,
-    } = req.fields;
+    const { name, description, price, category, quantity, shipping } =
+      req.fields;
     const { photo } = req.files;
 
     switch (true) {
@@ -157,6 +145,65 @@ exports.update = async (req, res) => {
 
     await product.save();
     res.json(product);
+  } catch (error) {
+    return res.json({ Message: error.message });
+  }
+};
+
+// filter products
+
+exports.filterProducts = async (req, res) => {
+  try {
+    const { check, radio } = req.body;
+    let arg = {};
+    if (check.length > 0) arg.category = check;
+    if (radio.length) arg.price = { $gte: radio[0], $lte: radio[1] };
+    const products = await Product.find(arg).select("-photo");
+    console.log("Filtered products query=>", products.length);
+    res.json(products);
+  } catch (error) {
+    return res.json({ Message: error.message });
+  }
+};
+
+// count product
+
+exports.countProdcuts = async (req, res) => {
+  try {
+    const products = await Product.find({}).estimatedDocumentCount();
+    res.json(products);
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
+};
+
+// product list by tab
+exports.productList = async (req, res) => {
+  try {
+    const perPage = 2;
+    const page = req.params.page ? req.params.page : 1;
+    const product = await Product.find({})
+      .select("-photo")
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 });
+    res.json(product);
+  } catch (error) {
+    return res.json({ Message: error.message });
+  }
+};
+
+// search product
+exports.searchProduct = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const product = await Product.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ]
+    }).select("-photo");
+    res.json(product)
   } catch (error) {
     return res.json({ Message: error.message });
   }
