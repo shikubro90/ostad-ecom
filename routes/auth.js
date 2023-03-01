@@ -15,7 +15,7 @@ router.get("/logout", logout);
 router.get("/auth-check", requireSignIn, (req, res) => {
   res.json({ ok: true });
 });
-router.get("/adminCheck", requireSignIn, isAdmin, (req, res) => {
+router.get("/admin-check", requireSignIn, isAdmin, (req, res) => {
   res.json({ ok: true });
 });
 router.put("/profile", requireSignIn, updateProfile);
