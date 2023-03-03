@@ -1,7 +1,6 @@
 const Category = require("../models/category");
 const slugify = require("slugify");
 
-
 // create collection
 exports.createCategory = async (req, res) => {
   try {
@@ -13,7 +12,7 @@ exports.createCategory = async (req, res) => {
     if (existingCategory) {
       return res.json({ error: "Already exists" });
     }
- 
+
     const category = await new Category({ name, slug: slugify(name) }).save();
     res.json(category);
   } catch (err) {
@@ -27,7 +26,7 @@ exports.update = async (req, res) => {
   try {
     const { name } = req.body;
     const { categoryId } = req.params;
-    console.log(categoryId)
+    console.log(categoryId);
     const getCategoryId = await Category.findById(categoryId);
 
     if (!getCategoryId) {
@@ -82,8 +81,6 @@ exports.read = async (req, res) => {
   }
 };
 
-
-
 // // get collections
 // exports.getCollections = async (req, res)=>{
 //   try{
@@ -130,10 +127,9 @@ exports.read = async (req, res) => {
 
 // get collections
 
-exports.getCollections = async (req, res)=>{
-  try{
-
-  }catch(error){
-    console.log(error)
+exports.getCollections = async (req, res) => {
+  try {
+  } catch (error) {
+    console.log(error);
   }
-}
+};
