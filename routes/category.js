@@ -11,7 +11,7 @@ const {
   read,
 } = require('../controllers/category')
 
-router.post('/create-category', requireSignIn, isAdmin, createCategory)
+router.post('/category', requireSignIn, isAdmin, createCategory)
 router.put('/update-category/:categoryId', requireSignIn, isAdmin, update)
 // router.get('/get-collections', requireSignIn, isAdmin, getCollections)
 router.delete('/remove/:categoryId', requireSignIn, isAdmin, remove)

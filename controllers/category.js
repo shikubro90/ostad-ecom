@@ -17,7 +17,7 @@ exports.createCategory = async (req, res) => {
     res.json(category);
   } catch (err) {
     console.log(err);
-    return res.status(400).json(err);
+    return res.json(err);
   }
 };
 
