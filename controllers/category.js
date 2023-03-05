@@ -26,13 +26,12 @@ exports.update = async (req, res) => {
   try {
     const { name } = req.body;
     const { categoryId } = req.params;
-    console.log(categoryId);
     const getCategoryId = await Category.findById(categoryId);
 
     if (!getCategoryId) {
       return res.json({ error: "Category not exists" });
     }
-    const Category = await Category.findByIdAndUpdate(
+    const category = await Category.findByIdAndUpdate(
       categoryId,
       {
         name,
@@ -43,7 +42,7 @@ exports.update = async (req, res) => {
     res.json(category);
   } catch (err) {
     console.log(err);
-    return res.status(400).json(err.message);
+    return res.json(err.message);
   }
 };
 
