@@ -31,7 +31,7 @@ router.delete("/product/:productId", requireSignIn, isAdmin, remove);
 router.put("/product/:productId", requireSignIn, isAdmin, formidable(), update);
 router.post("/filter-product", filterProducts);
 router.get("/count-product", countProdcuts);
-router.post("/list-product/:page", productList);
+router.get("/list-product/:page", productList);
 router.post("/search-products/:keyword", searchProduct)
 
 module.exports = router;
