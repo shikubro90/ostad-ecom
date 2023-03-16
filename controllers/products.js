@@ -154,9 +154,9 @@ exports.update = async (req, res) => {
 
 exports.filterProducts = async (req, res) => {
   try {
-    const { check, radio } = req.body;
+    const { checked, radio } = req.body;
     let arg = {};
-    if (check.length > 0) arg.category = check;
+    if (checked.length > 0) arg.category = checked;
     if (radio.length) arg.price = { $gte: radio[0], $lte: radio[1] };
     const products = await Product.find(arg).select("-photo");
     console.log("Filtered products query=>", products.length);
