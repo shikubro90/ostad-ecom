@@ -194,17 +194,18 @@ exports.productList = async (req, res) => {
 };
 
 // search product
-exports.searchProduct = async (req, res) => {
+exports.productsSearch = async (req, res) => {
   try {
     const { keyword } = req.params;
-    const product = await Product.find({
+    const results = await Product.find({
       $or: [
         { name: { $regex: keyword, $options: "i" } },
-        { description: { $regex: keyword, $options: "i" } },
-      ]
+        { description: { $regex: keyword, $options: "i" } }        
+      ],
     }).select("-photo");
-    res.json(product)
-  } catch (error) {
-    return res.json({ Message: error.message });
+    console.log("Yes")
+    res.json(results);
+  } catch (err) {
+    console.log(err);
   }
 };
