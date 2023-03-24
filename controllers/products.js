@@ -5,8 +5,14 @@ exports.createProduct = async (req, res) => {
   try {
     console.log(req.fields);
     console.log(req.files);
-    const { name, description, price, category, quantity, shipping } =
-      req.fields;
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      shipping,
+    } = req.fields;
     const { photo } = req.files;
     console.log("PHOTO========>", photo);
 
@@ -108,8 +114,14 @@ exports.remove = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { name, description, price, category, quantity, shipping } =
-      req.fields;
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      shipping,
+    } = req.fields;
     const { photo } = req.files;
 
     switch (true) {
@@ -200,12 +212,31 @@ exports.productsSearch = async (req, res) => {
     const results = await Product.find({
       $or: [
         { name: { $regex: keyword, $options: "i" } },
-        { description: { $regex: keyword, $options: "i" } }        
+        { description: { $regex: keyword, $options: "i" } },
       ],
     }).select("-photo");
-    console.log("Yes")
+    console.log("Yes");
     res.json(results);
   } catch (err) {
     console.log(err);
+  }
+};
+
+// related products
+exports.relatedProducts = async (req, res) => {
+  try {
+    const { productId, categoryId } = req.params;
+    const related = await Product.find({
+      category: categoryId,
+      _id: { $ne: productId },
+    })
+      .select("-photo")
+      .populate("category")
+      .limit(3);
+
+    res.json(related);
+    console.log(related)
+  } catch (error) {
+    console.log(error);
   }
 };

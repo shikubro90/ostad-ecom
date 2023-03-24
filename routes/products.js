@@ -15,6 +15,7 @@ const {
   countProdcuts,
   productList,
   productsSearch,
+  relatedProducts
 } = require("../controllers/products");
 
 router.post(
@@ -32,6 +33,7 @@ router.put("/product/:productId", requireSignIn, isAdmin, formidable(), update);
 router.post("/filter-product", filterProducts);
 router.get("/count-product", countProdcuts);
 router.get("/list-product/:page", productList);
+router.get("/related-products/:productId/:categoryId", relatedProducts)
 router.post("/search-products/:keyword", productsSearch);
 
 module.exports = router;
