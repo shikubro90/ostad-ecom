@@ -71,14 +71,14 @@ exports.remove = async (req, res) => {
 
 // read category
 
-exports.read = async (req, res) => {
-  try {
-    const category = await Category.findOne({ slug: req.params.slug });
-    res.json(category);
-  } catch (error) {
-    return res.json(error.message);
-  }
-};
+// exports.read = async (req, res) => {
+//   try {
+//     const category = await Category.findOne({ slug: req.params.slug });
+//     res.json(category);
+//   } catch (error) {
+//     return res.json(error.message);
+//   }
+// };
 
 // // get collections
 // exports.getCollections = async (req, res)=>{
@@ -92,15 +92,15 @@ exports.read = async (req, res) => {
 
 // remove category
 
-exports.remove = async (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const remove = await Category.findByIdAndDelete(categoryId);
-    res.json(remove);
-  } catch (err) {
-    return res.json(err.message);
-  }
-};
+// exports.remove = async (req, res) => {
+//   try {
+//     const { categoryId } = req.params;
+//     const remove = await Category.findByIdAndDelete(categoryId);
+//     res.json(remove);
+//   } catch (err) {
+//     return res.json(err.message);
+//   }
+// };
 
 // see all category
 
@@ -126,9 +126,9 @@ exports.read = async (req, res) => {
 
 // get collections
 
-exports.getCollections = async (req, res) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-};
+// exports.getCollections = async (req, res) => {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
