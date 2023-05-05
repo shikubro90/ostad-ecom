@@ -310,3 +310,32 @@ exports.processpayment = async (req, res) => {
     console.log(error)
   }
 }
+
+// orderStatus
+exports.orderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body
+    const order = await Order.findByIdAndUpdate(
+      orderId, 
+      { status },
+      {new: true}
+    ).populate("buyer", "email name")
+    res.json(order);
+    // send email
+
+    // prepared email
+  } catch (error) {
+    
+  }
+}
+
+// allOrder
+exports.allOrder = async (req,res) => {
+  try {
+    const orders = await Order.find({})
+    res.json(orders)
+  } catch (error) {
+    console.log(error)
+  }
+}

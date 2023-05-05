@@ -17,6 +17,8 @@ const {
   productsSearch,
   relatedProducts,
   processpayment,
+  orderStatus,
+  allOrder,
   getToken
 } = require("../controllers/products");
 
@@ -41,5 +43,7 @@ router.post("/search-products/:keyword", productsSearch);
 // check out
 router.get("/braintree/token", getToken)
 router.post("/braintree/payment", requireSignIn, processpayment);
+router.put("/order-status/:orderId", requireSignIn, isAdmin, orderStatus)
+router.get("/all-order", allOrder)
 
 module.exports = router;
