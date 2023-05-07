@@ -5,6 +5,7 @@ const {
   register,
   loginUser,
   updateProfile,
+  getOrderController,
   logout,
 } = require("../controllers/auth");
 const { requireSignIn, isAdmin } = require("../middlewares/auth");
@@ -19,5 +20,7 @@ router.get("/admin-check", requireSignIn, isAdmin, (req, res) => {
   res.json({ ok: true });
 });
 router.put("/profile", requireSignIn, updateProfile);
+
+router.get("/user-orders", requireSignIn, getOrderController)
 
 module.exports = router;

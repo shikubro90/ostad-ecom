@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Order = require("../models/order");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -163,3 +164,20 @@ exports.updateProfile = async (req, res) => {
     console.log(error);
   }
 };
+
+
+// USER ORDERS
+
+exports.getOrderController = async (req, res) => {
+  try {
+    const orders = await Order.find({ buyer: req.user._id }).populate("products", "-photo").populate("buyer", "name");
+    res.json(orders)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      success: false,
+      message: "Error While Getting Orders",
+      error
+    })
+  }
+}

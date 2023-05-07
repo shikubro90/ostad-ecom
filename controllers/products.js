@@ -2,7 +2,6 @@ const Product = require("../models/products");
 const slugify = require("slugify");
 const fs = require("fs");
 
-
 const braintree = require("braintree");
 const { env } = require("process");
 const Order = require("../models/order");
@@ -11,9 +10,8 @@ const gateway = new braintree.BraintreeGateway({
   environment: braintree.Environment.Sandbox,
   merchantId: process.env.BRAINTREE_MARCHENT_ID,
   publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-  privateKey : process.env.BRAINTREE_PRIVET_KEY
-})
-
+  privateKey: process.env.BRAINTREE_PRIVET_KEY,
+});
 
 exports.createProduct = async (req, res) => {
   try {
@@ -249,13 +247,11 @@ exports.relatedProducts = async (req, res) => {
       .limit(3);
 
     res.json(related);
-    console.log(related)
+    console.log(related);
   } catch (error) {
     console.log(error);
   }
 };
-
-
 
 // get token
 
@@ -263,21 +259,17 @@ exports.getToken = async (req, res) => {
   try {
     gateway.clientToken.generate({}, function (error, response) {
       if (error) {
-        res.status(500).send(error)
+        res.status(500).send(error);
       } else {
-        res.send(response)
+        res.send(response);
       }
-    })
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
-
-
+};
 
 // processpayment
-
 exports.processpayment = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
@@ -285,57 +277,60 @@ exports.processpayment = async (req, res) => {
     let total = 0;
 
     cart.map((e) => {
-      return total += e.price;
-    })
+      return (total += e.price);
+    });
 
-    let newTransaction = gateway.transaction.sale({
-      amount: total,
-      paymentMethodNonce: nonce,
-      options: {
-        submitForSettlement: true
+    let newTransaction = gateway.transaction.sale(
+      {
+        amount: total,
+        paymentMethodNonce: nonce,
+        options: {
+          submitForSettlement: true,
+        },
+      },
+      function (error, result) {
+        if (result) {
+          const order = new Order({
+            products: cart,
+            payment: result,
+            buyer: req.user._id,
+          }).save();
+        }
       }
-    }, function (error,result) {
-      if (result) {
-        const order = new Order({
-          products: cart,
-          payment: result,
-          buyer: req.user._id
-        }).save();
-      }
-    })
+    );
 
-    res.json({ok :  true})
-
+    res.json({ ok: true });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 // orderStatus
 exports.orderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body
+    const { status } = req.body;
     const order = await Order.findByIdAndUpdate(
-      orderId, 
+      orderId,
       { status },
-      {new: true}
-    ).populate("buyer", "email name")
+      { new: true }
+    ).populate("buyer", "email name");
     res.json(order);
     // send email
 
     // prepared email
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 
 // allOrder
-exports.allOrder = async (req,res) => {
+exports.allOrder = async (req, res) => {
   try {
     const orders = await Order.find({})
-    res.json(orders)
+      .populate("products", "-photo")
+      .populate("buyer", "name")
+      .sort({ createdAt: "-1" });
+    res.json(orders);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
